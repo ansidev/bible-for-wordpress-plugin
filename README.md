@@ -10,15 +10,20 @@ Copyright 2016 by **ansidev** | License: **MIT**
 ### 1. Plugin Name
 
 > Contributors: Dan Frist, Jesse Lang, ansidev 
+
 > Tags: `bible`, `youversion`
+
 > Requires at least: `2.0`
+
 > Tested up to: `4.5.2`
 
 ### 2. Installation
 
-1. Upload the `bible_for_wordpress.php` file to the `/wp-content/plugins/` directory.
-2. Activate the plugin through the `Plugins` menu in WordPress.
-3. Go to `Settings` > `Bible for Wordpress` to setting for plugin.
+**Step 1:** Upload the `bible_for_wordpress.php` file to the `/wp-content/plugins/` directory.
+
+**Step 2:** Activate the plugin through the `Plugins` menu in WordPress.
+
+**Step 3:** Go to `Settings` > `Bible for Wordpress` to setting for plugin.
 
 ### 3. Instruction
 
@@ -32,18 +37,19 @@ Second, when you create a new post or page on your Wordpress powered website, us
 
 ##### **3.2 Example:**
 
-> In the text editor, type: `Hi, my name is Scott and [youversion]John 3:16[/youversion] is my favorite verse.`
+In the text editor, type: `Hi, my name is Scott and [youversion]John 3:16[/youversion] is my favorite verse.`
 
-> When you publish the post or page, it will look like: *Hi, my name is Scott and [John 3:16](https://www.bible.com/bible/151/john.3.16 "John 3:16") is my favorite verse.*
+When you publish the post or page, it will look like: *Hi, my name is Scott and [John 3:16](https://www.bible.com/bible/151/john.3.16 "John 3:16") is my favorite verse.*
 
-> Remember to spell the verse reference properly and use the commonly accepted format for Bible references (ie. John 3:16). The reference formats that work are "John 3:16" and "John 3:16-18".
+Remember to spell the verse reference properly and use the commonly accepted format for Bible references (ie. John 3:16). The reference formats that work are "John 3:16" and "John 3:16-18".
 
-> References that use commas (ie. John 3:16,18) or multi-chapter spans (ie. John 3:16-4:5) will not work and will result in a link that leads to a dead page on [Bible.com](https://bible.com/ "Bible.com").
+References that use commas (ie. John 3:16,18) or multi-chapter spans (ie. John 3:16-4:5) will not work and will result in a link that leads to a dead page on [Bible.com](https://bible.com/ "Bible.com").
 
 ##### **3.3 More information:**
 
-You can also use abbreviation name for book name. Ex: `Gen` ~ `Genesis`. View all supported name in Plugin Settings Page.
+You can also use abbreviation name for book name. Ex: `Gen` ~ `Genesis`. Please view all supported name in Plugin Settings Page.
 
 Because of many bible versions, plugins support quick search bible version you want using [Select2](https://select2.github.io "Select2").
 
 If you use only specific versions, you can customize plugin for your site.
+
