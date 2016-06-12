@@ -6,7 +6,7 @@
  */
 /*
 Plugin Name: Bible for Wordpress
-Plugin URI: https://github.com/ansidev
+Plugin URI: https://github.com/ansidev/bible-for-wordpress-plugin
 Description: This plugin is used to get scripture from bible.com
 Author: ansidev, (original authors: DanFrist and Jesse Lang)
 Version: 2.0
@@ -17,10 +17,6 @@ Text Domain: bible-for-wordpress
 define("BIBLE_VERSION_OPT", "bible_version_option");
 define("BIBLE_DISPLAY_OPT", "bible_display_option");
 
-// List of books and their abbreviations  (OSIS)
-$books = array('Genesis' => 'Gen', 'Exodus' => 'Exod', 'Leviticus' => 'Lev', 'Numbers' => 'Num', 'Deuteronomy' => 'Deut', 'Joshua' => 'Josh', 'Judges' => 'Judg', 'Ruth' => 'Ruth', '1 Samuel' => '1Sam', '2 Samuel' => '2Sam', '1 Kings' => '1Kgs', '2 Kings' => '2Kgs', '1 Chronicles' => '1Chr', '2 Chronicles' => '2Chr', 'Ezra' => 'Ezra', 'Nehemiah' => 'Neh', 'Esther' => 'Esth', 'Job' => 'Job', 'Psalms' => 'Ps', 'Proverbs' => 'Prov', 'Ecclesiastes' => 'Eccl', 'Song of Solomon' => 'Song', 'Isaiah' => 'Isa', 'Jeremiah' => 'Jer', 'Lamentations' => 'Lam', 'Ezekiel' => 'Ezek', 'Daniel' => 'Dan', 'Hosea' => 'Hos', 'Joel' => 'Joel', 'Amos' => 'Amos', 'Obadiah' => 'Obad', 'Jonah' => 'Jonah', 'Micah' => 'Mic', 'Nahum' => 'Nah', 'Habakkuk' => 'Hab', 'Zephaniah' => 'Zeph', 'Haggai' => 'Hag', 'Zechariah' => 'Zech', 'Malachi' => 'Mal', 'Matthew' => 'Matt', 'Mark' => 'Mark', 'Luke' => 'Luke', 'John' => 'John', 'Acts' => 'Acts', 'Romans' => 'Rom', '1 Corinthians' => '1Cor', '2 Corinthians' => '2Cor', 'Galatians' => 'Gal', 'Ephesians' => 'Eph', 'Philippians' => 'Phil', 'Colossians' => 'Col', '1 Thessalonians' => '1Thess', '2 Thessalonians' => '2Thess', '1 Timothy' => '1Tim', '2 Timothy' => '2Tim', 'Titus' => 'Titus', 'Philemon' => 'Phlm', 'Hebrews' => 'Heb', 'James' => 'Jas', '1 Peter' => '1Pet', '2 Peter' => '2Pet', '1 John' => '1John', '2 John' => '2John', '3 John' => '3John', 'Jude' => 'Jude', 'Revelation' => 'Rev');
-// Set as constant
-define("BIBLE_BOOKS", $books);
 function bible_generate_links($text) {
     // If there is a bible tag in the text
     if (strpos($text, '[bible]') !== false) {
@@ -37,8 +33,11 @@ function bible_generate_links($text) {
                 // trim away closing tag
                 $row_exploded[0] = preg_replace('/\[\/bible\].*/', '', $row_exploded[0]);
 
+                // List of books and their abbreviations  (OSIS)
+                $books = array('Genesis' => 'Gen', 'Exodus' => 'Exod', 'Leviticus' => 'Lev', 'Numbers' => 'Num', 'Deuteronomy' => 'Deut', 'Joshua' => 'Josh', 'Judges' => 'Judg', 'Ruth' => 'Ruth', '1 Samuel' => '1Sam', '2 Samuel' => '2Sam', '1 Kings' => '1Kgs', '2 Kings' => '2Kgs', '1 Chronicles' => '1Chr', '2 Chronicles' => '2Chr', 'Ezra' => 'Ezra', 'Nehemiah' => 'Neh', 'Esther' => 'Esth', 'Job' => 'Job', 'Psalms' => 'Ps', 'Proverbs' => 'Prov', 'Ecclesiastes' => 'Eccl', 'Song of Solomon' => 'Song', 'Isaiah' => 'Isa', 'Jeremiah' => 'Jer', 'Lamentations' => 'Lam', 'Ezekiel' => 'Ezek', 'Daniel' => 'Dan', 'Hosea' => 'Hos', 'Joel' => 'Joel', 'Amos' => 'Amos', 'Obadiah' => 'Obad', 'Jonah' => 'Jonah', 'Micah' => 'Mic', 'Nahum' => 'Nah', 'Habakkuk' => 'Hab', 'Zephaniah' => 'Zeph', 'Haggai' => 'Hag', 'Zechariah' => 'Zech', 'Malachi' => 'Mal', 'Matthew' => 'Matt', 'Mark' => 'Mark', 'Luke' => 'Luke', 'John' => 'John', 'Acts' => 'Acts', 'Romans' => 'Rom', '1 Corinthians' => '1Cor', '2 Corinthians' => '2Cor', 'Galatians' => 'Gal', 'Ephesians' => 'Eph', 'Philippians' => 'Phil', 'Colossians' => 'Col', '1 Thessalonians' => '1Thess', '2 Thessalonians' => '2Thess', '1 Timothy' => '1Tim', '2 Timothy' => '2Tim', 'Titus' => 'Titus', 'Philemon' => 'Phlm', 'Hebrews' => 'Heb', 'James' => 'Jas', '1 Peter' => '1Pet', '2 Peter' => '2Pet', '1 John' => '1John', '2 John' => '2John', '3 John' => '3John', 'Jude' => 'Jude', 'Revelation' => 'Rev');
+
                 // change book name to abbreviated book name
-                foreach(BIBLE_BOOKS as $key => $value) {
+                foreach($books as $key => $value) {
                     if (stristr($row_exploded[0], $key) !== false) {
                         $reference_link = str_replace($key, strtolower($value).'.', $row_exploded[0]);
                         break;
@@ -105,7 +104,7 @@ function bible_generate_links($text) {
 // load css into the admin pages
 function select2_enqueue_style() {
     wp_enqueue_style('select2', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css', array(), null); 
-    wp_enqueue_script("jquery");
+    wp_enqueue_script('jquery');
     wp_enqueue_script('select2', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js', array(), null, true);
 }
 add_action('admin_enqueue_scripts', 'select2_enqueue_style');
@@ -124,6 +123,7 @@ function bible_config() {
 
     }
 
+    // if settings have been posted
     if (isset($_POST[BIBLE_DISPLAY_OPT])) {
         // if the option already exists, update it, else add it
         (get_option(BIBLE_DISPLAY_OPT)) ? update_option(BIBLE_DISPLAY_OPT, $_POST[BIBLE_DISPLAY_OPT]) : add_option(BIBLE_DISPLAY_OPT, $_POST[BIBLE_DISPLAY_OPT]);
@@ -131,6 +131,7 @@ function bible_config() {
     }
     // get current version of bible from db for selecting list item
     $current_bible_version = get_option(BIBLE_VERSION_OPT);
+    // get current display type from db for display scripture or link
 	$current_display_type = get_option(BIBLE_DISPLAY_OPT);
 
     ?>
@@ -227,8 +228,9 @@ function bible_config() {
                             <i>Old Testament</i>
                             <hr/>
 							<?php
-								$book_arr = array_chunk(BIBLE_BOOKS,39,true);
-								foreach($book_arr[0] as $key => $value) {
+                                // List of old statement books and their abbreviations  (OSIS)
+                                $os_books = array('Genesis' => 'Gen', 'Exodus' => 'Exod', 'Leviticus' => 'Lev', 'Numbers' => 'Num', 'Deuteronomy' => 'Deut', 'Joshua' => 'Josh', 'Judges' => 'Judg', 'Ruth' => 'Ruth', '1 Samuel' => '1Sam', '2 Samuel' => '2Sam', '1 Kings' => '1Kgs', '2 Kings' => '2Kgs', '1 Chronicles' => '1Chr', '2 Chronicles' => '2Chr', 'Ezra' => 'Ezra', 'Nehemiah' => 'Neh', 'Esther' => 'Esth', 'Job' => 'Job', 'Psalms' => 'Ps', 'Proverbs' => 'Prov', 'Ecclesiastes' => 'Eccl', 'Song of Solomon' => 'Song', 'Isaiah' => 'Isa', 'Jeremiah' => 'Jer', 'Lamentations' => 'Lam', 'Ezekiel' => 'Ezek', 'Daniel' => 'Dan', 'Hosea' => 'Hos', 'Joel' => 'Joel', 'Amos' => 'Amos', 'Obadiah' => 'Obad', 'Jonah' => 'Jonah', 'Micah' => 'Mic', 'Nahum' => 'Nah', 'Habakkuk' => 'Hab', 'Zephaniah' => 'Zeph', 'Haggai' => 'Hag', 'Zechariah' => 'Zech', 'Malachi' => 'Mal');
+								foreach($os_books as $key => $value) {
 									echo "<code>".$key."</code> or \t<code>".$value."</code><br><br>";
 							}?>
                         </p>
@@ -238,7 +240,10 @@ function bible_config() {
 						<p>
                             <i>New Testament</i>
 							<hr/>
-							<?php foreach($book_arr[1] as $key => $value) {
+							<?php
+                                // List of new statement books and their abbreviations  (OSIS)
+                                $ns_books = array('Matthew' => 'Matt', 'Mark' => 'Mark', 'Luke' => 'Luke', 'John' => 'John', 'Acts' => 'Acts', 'Romans' => 'Rom', '1 Corinthians' => '1Cor', '2 Corinthians' => '2Cor', 'Galatians' => 'Gal', 'Ephesians' => 'Eph', 'Philippians' => 'Phil', 'Colossians' => 'Col', '1 Thessalonians' => '1Thess', '2 Thessalonians' => '2Thess', '1 Timothy' => '1Tim', '2 Timothy' => '2Tim', 'Titus' => 'Titus', 'Philemon' => 'Phlm', 'Hebrews' => 'Heb', 'James' => 'Jas', '1 Peter' => '1Pet', '2 Peter' => '2Pet', '1 John' => '1John', '2 John' => '2John', '3 John' => '3John', 'Jude' => 'Jude', 'Revelation' => 'Rev');
+                                foreach($ns_books as $key => $value) {
 									echo "<code>".$key."</code> or \t<code>".$value."</code><br><br>";
 							}?>
                         </p>
