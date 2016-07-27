@@ -19,25 +19,25 @@ Copyright 2016 by **ansidev** | License: **MIT**
 
 ### 2. Installation
 
-**Step 1:** Upload the `bible_for_wordpress.php` file to the `/wp-content/plugins/` directory.
+**Step 1:** Download latest release version from [https://github.com/ansidev/bible-for-wordpress-plugin/releases](https://github.com/ansidev/bible-for-wordpress-plugin/releases "Release Versions Page").
 
-**Step 2:** Activate the plugin through the `Plugins` menu in WordPress.
+**Step 2:** Install plugin via `Plugins` > `Add New` > `Upload Plugin`.
 
-**Step 3:** Go to `Settings` > `Bible for Wordpress` to setting for plugin.
+**Step 3:** Activate the plugin through the `Plugins` menu in WordPress.
+
+**Step 4:** Go to `Settings` > `Bible for Wordpress` to setting for plugin.
 
 ### 3. Instruction
 
-##### **3.1 Instructions on How To Use the** `[bible]` **Tags**
+##### **3.1 Instructions on How To Use the plugin** 
 
-The Bible for Wordpress plugin gives you the ability to quickly retrieve bible word or link to Bible verses using a simple tag structure that's familiar to Wordpress.
+1. Type the Bible Address. E.g: John 3:16. Then select them.
 
-First, make sure to choose the **Bible version** and **display type** you want to use. You can change this setting later.
-
-Second, when you create a new post or page on your Wordpress powered website, use this format **[bible]`Book name` `Chapter number` : `Sentence number`[/bible]** to create a reference with a link to that verse on [Bible.com](https://bible.com/ "Bible.com").
+2. Click Bible for Wordpress Button on the WP Editor Toolbar. You should see [bible]John 3:16[/bible]
 
 ##### **3.2 Example:**
 
-In the text editor, type: `Hi, my name is Scott and [youversion]John 3:16[/youversion] is my favorite verse.`
+In the text editor, type: `Hi, my name is Scott and [bible]John 3:16[/bible] is my favorite verse.`
 
 When you publish the post or page, it will look like: *Hi, my name is Scott and [John 3:16](https://www.bible.com/bible/151/john.3.16 "John 3:16") is my favorite verse.*
 
