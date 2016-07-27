@@ -2,36 +2,41 @@
 /**
  * @package Bible for Wordpress
  * @author ansidev
- * @version 2.0
+ * @version 2.1
  */
 /*
 Plugin Name: Bible for Wordpress
 Plugin URI: https://github.com/ansidev/bible-for-wordpress-plugin
 Description: This plugin is used to get scripture from bible.com
 Author: ansidev, (original authors: DanFrist and Jesse Lang)
-Version: 2.0
+Version: 2.1
 Author URI: https://github.com/ansidev
 Text Domain: bible-for-wordpress
 */
 // Option names
-define("BIBLE_VERSION_OPT", "bible_version_option");
-define("BIBLE_DISPLAY_OPT", "bible_display_option");
+define('BIBLE_VERSION_OPT', 'bible_version_option');
+define('BIBLE_DISPLAY_OPT', 'bible_display_option');
+define("BIBLE_SHORTCODE", 'bible');
+define('BIBLE_SHORTCODE_OT', '[' . BIBLE_SHORTCODE . ']');
+define('BIBLE_SHORTCODE_CT', '[/' . BIBLE_SHORTCODE . ']');
+
+
 
 function bible_generate_links($text) {
     // If there is a bible tag in the text
-    if (strpos($text, '[bible]') !== false) {
+    if (strpos($text, BIBLE_SHORTCODE_OT) !== false) {
         // Explode the text into an array
-        $text = explode('[bible]', $text);
+        $text = explode(BIBLE_SHORTCODE_OT, $text);
 
         // Loop through array
         foreach($text as $row) {
             // If this row has a
-            if (strpos($row, '[/bible]') !== false) {
+            if (strpos($row, BIBLE_SHORTCODE_CT) !== false) {
                 // explode this return in case there is more text after the tag
-                $row_exploded = explode('[/bible]', $row);
+                $row_exploded = explode(BIBLE_SHORTCODE_CT, $row);
 
                 // trim away closing tag
-                $row_exploded[0] = preg_replace('/\[\/bible\].*/', '', $row_exploded[0]);
+                $row_exploded[0] = preg_replace('/\[\/'. BIBLE_SHORTCODE .'\].*/', '', $row_exploded[0]);
 
                 // List of books and their abbreviations  (OSIS)
                 $books = array('Genesis' => 'Gen', 'Exodus' => 'Exod', 'Leviticus' => 'Lev', 'Numbers' => 'Num', 'Deuteronomy' => 'Deut', 'Joshua' => 'Josh', 'Judges' => 'Judg', 'Ruth' => 'Ruth', '1 Samuel' => '1Sam', '2 Samuel' => '2Sam', '1 Kings' => '1Kgs', '2 Kings' => '2Kgs', '1 Chronicles' => '1Chr', '2 Chronicles' => '2Chr', 'Ezra' => 'Ezra', 'Nehemiah' => 'Neh', 'Esther' => 'Esth', 'Job' => 'Job', 'Psalms' => 'Ps', 'Proverbs' => 'Prov', 'Ecclesiastes' => 'Eccl', 'Song of Solomon' => 'Song', 'Isaiah' => 'Isa', 'Jeremiah' => 'Jer', 'Lamentations' => 'Lam', 'Ezekiel' => 'Ezek', 'Daniel' => 'Dan', 'Hosea' => 'Hos', 'Joel' => 'Joel', 'Amos' => 'Amos', 'Obadiah' => 'Obad', 'Jonah' => 'Jonah', 'Micah' => 'Mic', 'Nahum' => 'Nah', 'Habakkuk' => 'Hab', 'Zephaniah' => 'Zeph', 'Haggai' => 'Hag', 'Zechariah' => 'Zech', 'Malachi' => 'Mal', 'Matthew' => 'Matt', 'Mark' => 'Mark', 'Luke' => 'Luke', 'John' => 'John', 'Acts' => 'Acts', 'Romans' => 'Rom', '1 Corinthians' => '1Cor', '2 Corinthians' => '2Cor', 'Galatians' => 'Gal', 'Ephesians' => 'Eph', 'Philippians' => 'Phil', 'Colossians' => 'Col', '1 Thessalonians' => '1Thess', '2 Thessalonians' => '2Thess', '1 Timothy' => '1Tim', '2 Timothy' => '2Tim', 'Titus' => 'Titus', 'Philemon' => 'Phlm', 'Hebrews' => 'Heb', 'James' => 'Jas', '1 Peter' => '1Pet', '2 Peter' => '2Pet', '1 John' => '1John', '2 John' => '2John', '3 John' => '3John', 'Jude' => 'Jude', 'Revelation' => 'Rev');
@@ -165,7 +170,7 @@ function bible_config() {
                                 ?>
                                     <optgroup label=<?php _e('"'.$label.'"');?>>
                                     <?php foreach ($language['versions'] as $ver_index => $bible_version) { ?>
-										<option value=<?php _e($bible_version['id']); if ($current_bible_version == $bible_version['id']) { _e(' selected="selected"'); } ?>><?php _e($bible_version['title']); ?></option>
+										<option value=<?php _e($bible_version['id']); if ($current_bible_version == $bible_version['id']) { _e(' selected="selected"'); } ?>><?php _e($bible_version['abbr']." - ".$bible_version['title']); ?></option>
                                     <?php } ?>
                                     </optgroup>
                                 <?php } ?>
@@ -270,4 +275,48 @@ add_filter('the_content', 'bible_generate_links');
 // add bible to plugins list in admin
 add_action('admin_menu', 'bible_config_page');
 
+add_action('init', 'bible_for_wp_buttons');
+function bible_for_wp_buttons() {
+    add_filter( "mce_external_plugins", "bible_for_wp_add_buttons" );
+    add_filter( 'mce_buttons', 'bible_for_wp_register_buttons' );
+}
+function bible_for_wp_add_buttons($plugin_array) {
+    $plugin_array['bible_for_wp'] = plugins_url() . '/bible-for-wordpress/bible_for_wordpress.js';
+    return $plugin_array;
+}
+function bible_for_wp_register_buttons($buttons) {
+    array_push($buttons, 'bible_for_wp');
+    return $buttons;
+}
+
+// add button to Wordpress Text Editor
+function bible_shortcode_button_script() 
+{
+    if(wp_script_is("quicktags"))
+    {
+        ?>
+            <script type="text/javascript">
+                
+                // this function is used to retrieve the selected text from the text editor
+                function getSelected()
+                {
+                    var txtarea = document.getElementById("content");
+                    var start = txtarea.selectionStart;
+                    var finish = txtarea.selectionEnd;
+                    return txtarea.value.substring(start, finish);
+                }
+
+                QTags.addButton("bible_shortcode", "bible", callback);
+
+                function callback()
+                {
+                    var bible_address = getSelected();
+                    QTags.insertContent(<?php _e("'" . BIBLE_SHORTCODE_OT . "'"); ?> +  bible_address + <?php _e("'" . BIBLE_SHORTCODE_CT . "'"); ?>);
+                }
+            </script>
+        <?php
+    }
+}
+
+add_action("admin_print_footer_scripts", "bible_shortcode_button_script");
 ?>
