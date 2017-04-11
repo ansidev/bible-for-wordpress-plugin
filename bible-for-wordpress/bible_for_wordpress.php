@@ -2,19 +2,22 @@
 /**
  * @package Bible for Wordpress
  * @author ansidev
- * @version 2.1
+ * @version 3.1
  */
 /*
 Plugin Name: Bible for Wordpress
 Plugin URI: https://github.com/ansidev/bible-for-wordpress-plugin
-Description: This plugin is used to get scripture from bible.com
+Description: This plugin is used to get scripture from bible.com, compatible with Bible API version 3.1
 Author: ansidev, (original authors: DanFrist and Jesse Lang)
-Version: 2.1
+Version: 3.1
 Author URI: https://github.com/ansidev
 Text Domain: bible-for-wordpress
 */
 // Option names
-define('BIBLE_VERSION_OPT', 'bible_version_option');
+define('BIBLE_DOT_COM_API_VERSION', '3.1');
+define('BIBLE_DOT_COM_API_BASE_URI', 'https://events.bible.com/api/bible/versions/' . BIBLE_DOT_COM_API_VERSION);
+define('BIBLE_VERSE_API_BASE_URI', 'https://events.bible.com/api/bible/verses/' . BIBLE_DOT_COM_API_VERSION);
+define('BIBLE_TRANSLATION_OPT', 'BIBLE_TRANSLATION_OPTion');
 define('BIBLE_DISPLAY_OPT', 'bible_display_option');
 define("BIBLE_SHORTCODE", 'bible');
 define('BIBLE_SHORTCODE_OT', '[' . BIBLE_SHORTCODE . ']');
@@ -38,16 +41,16 @@ function bible_generate_links($text) {
                 // trim away closing tag
                 $row_exploded[0] = preg_replace('/\[\/'. BIBLE_SHORTCODE .'\].*/', '', $row_exploded[0]);
 
-                // List of books and their abbreviations  (OSIS)
-                $books = array('Genesis' => 'Gen', 'Exodus' => 'Exod', 'Leviticus' => 'Lev', 'Numbers' => 'Num', 'Deuteronomy' => 'Deut', 'Joshua' => 'Josh', 'Judges' => 'Judg', 'Ruth' => 'Ruth', '1 Samuel' => '1Sam', '2 Samuel' => '2Sam', '1 Kings' => '1Kgs', '2 Kings' => '2Kgs', '1 Chronicles' => '1Chr', '2 Chronicles' => '2Chr', 'Ezra' => 'Ezra', 'Nehemiah' => 'Neh', 'Esther' => 'Esth', 'Job' => 'Job', 'Psalms' => 'Ps', 'Proverbs' => 'Prov', 'Ecclesiastes' => 'Eccl', 'Song of Solomon' => 'Song', 'Isaiah' => 'Isa', 'Jeremiah' => 'Jer', 'Lamentations' => 'Lam', 'Ezekiel' => 'Ezek', 'Daniel' => 'Dan', 'Hosea' => 'Hos', 'Joel' => 'Joel', 'Amos' => 'Amos', 'Obadiah' => 'Obad', 'Jonah' => 'Jonah', 'Micah' => 'Mic', 'Nahum' => 'Nah', 'Habakkuk' => 'Hab', 'Zephaniah' => 'Zeph', 'Haggai' => 'Hag', 'Zechariah' => 'Zech', 'Malachi' => 'Mal', 'Matthew' => 'Matt', 'Mark' => 'Mark', 'Luke' => 'Luke', 'John' => 'John', 'Acts' => 'Acts', 'Romans' => 'Rom', '1 Corinthians' => '1Cor', '2 Corinthians' => '2Cor', 'Galatians' => 'Gal', 'Ephesians' => 'Eph', 'Philippians' => 'Phil', 'Colossians' => 'Col', '1 Thessalonians' => '1Thess', '2 Thessalonians' => '2Thess', '1 Timothy' => '1Tim', '2 Timothy' => '2Tim', 'Titus' => 'Titus', 'Philemon' => 'Phlm', 'Hebrews' => 'Heb', 'James' => 'Jas', '1 Peter' => '1Pet', '2 Peter' => '2Pet', '1 John' => '1John', '2 John' => '2John', '3 John' => '3John', 'Jude' => 'Jude', 'Revelation' => 'Rev');
+                // List of books and their abbreviations (OSIS)
+                $books = array('Genesis' => 'Gen', 'Exodus' => 'Exo', 'Leviticus' => 'Lev', 'Numbers' => 'Num', 'Deuteronomy' => 'Deu', 'Joshua' => 'Jos', 'Judges' => 'Jdg', 'Ruth' => 'Rut', '1 Samuel' => '1Sa', '2 Samuel' => '2Sa', '1 Kings' => '1Ki', '2 Kings' => '2Ki', '1 Chronicles' => '1Ch', '2 Chronicles' => '2Ch', 'Ezra' => 'Ezr', 'Nehemiah' => 'Neh', 'Esther' => 'Est', 'Job' => 'Job', 'Psalms' => 'Psa', 'Proverbs' => 'Pro', 'Ecclesiastes' => 'Ecc', 'Song of Solomon' => 'Sng', 'Isaiah' => 'Isa', 'Jeremiah' => 'Jer', 'Lamentations' => 'Lam', 'Ezekiel' => 'Ezk', 'Daniel' => 'Dan', 'Hosea' => 'Hos', 'Joel' => 'Jol', 'Amos' => 'Amo', 'Obadiah' => 'Oba', 'Jonah' => 'Jon', 'Micah' => 'Mic', 'Nahum' => 'Nam', 'Habakkuk' => 'Hab', 'Zephaniah' => 'Zep', 'Haggai' => 'Hag', 'Zechariah' => 'Zec', 'Malachi' => 'Mal', 'Matthew' => 'Mat', 'Mark' => 'Mrk', 'Luke' => 'Luk', 'John' => 'Jhn', 'Acts' => 'Act', 'Romans' => 'Rom', '1 Corinthians' => '1Co', '2 Corinthians' => '2Co', 'Galatians' => 'Gal', 'Ephesians' => 'Eph', 'Philippians' => 'Php', 'Colossians' => 'Col', '1 Thessalonians' => '1Th', '2 Thessalonians' => '2Th', '1 Timothy' => '1Ti', '2 Timothy' => '2Ti', 'Titus' => 'Tit', 'Philemon' => 'Phm', 'Hebrews' => 'Heb', 'James' => 'Jas', '1 Peter' => '1Pe', '2 Peter' => '2Pe', '1 John' => '1Jn', '2 John' => '2Jn', '3 John' => '3Jn', 'Jude' => 'Jud', 'Revelation' => 'Rev');
 
                 // change book name to abbreviated book name
                 foreach($books as $key => $value) {
                     if (stristr($row_exploded[0], $key) !== false) {
-                        $reference_link = str_replace($key, strtolower($value).'.', $row_exploded[0]);
+                        $reference_link = str_replace($key, strtoupper($value).'.', $row_exploded[0]);
                         break;
                     } else if (stristr($row_exploded[0], $value) !== false) {
-                        $reference_link = str_replace($value, strtolower($value).'.', $row_exploded[0]);
+                        $reference_link = str_replace($value, strtoupper($value).'.', $row_exploded[0]);
                         break;
                     } 
                 }
@@ -59,33 +62,38 @@ function bible_generate_links($text) {
                 $last_space = strrpos($reference_link, ' ', $last_dot + 1);
 
                 if ($last_space === false) {
-                    $version = get_option(BIBLE_VERSION_OPT);
+                    $translation_id = get_option(BIBLE_TRANSLATION_OPT);
                 } else {
                     $version_length = strlen($reference_link) - $last_space - 1;
                     if ($version_length >= 3 && $version_length <= 6) {
-                        $version = strtolower(substr($reference_link, $last_space + 1));
+                        $translation_id = strtolower(substr($reference_link, $last_space + 1));
                         $reference_link = substr($reference_link, 0, $last_space);
                     } else {
-                        $version = get_option(BIBLE_VERSION_OPT);
+                        $translation_id = get_option(BIBLE_TRANSLATION_OPT);
                     }
                 }
 
-                // remove any spaces
-                $reference_link = 'http://bible.com/bible/'.$version.'/'.str_replace(' ', '', $reference_link);
-				if (get_option(BIBLE_DISPLAY_OPT) == 'scripture') {
-					// Create request
-					$request = wp_remote_get($reference_link.'.json');
-					// Get response message
-					$scripture = wp_remote_retrieve_body($request);
-					// Decode message to PHP array.
-					$scripture = json_decode($scripture, true);
-					// put scripture in a blockquote tag
-                    $link = '<a target="_blank" href='.$reference_link.'>'.$scripture['human'].'</a>';
-					$row_exploded[0] = '<blockquote>'.$scripture['reader_html'].' ('.$link.')</blockquote>';
-				} else {
-					// put the text in the tag in a link
-					$row_exploded[0] = '<a target="_blank" href='.$reference_link.'>'.$row_exploded[0]. '</a>';
-				}
+                $scripture_link = 'https://www.bible.com/bible/' . $translation_id . '/' . str_replace(' ', '', $reference_link);
+                $reference_link = BIBLE_VERSE_API_BASE_URI . '?id=' . $translation_id .'&references[0]=' . str_replace(' ', '', $reference_link) . '&format=text';
+
+                // Create request
+                $request = wp_remote_get($reference_link);
+                // Get response message
+                $scripture = wp_remote_retrieve_body($request);
+                // Decode message to PHP array.
+                $scripture = json_decode($scripture, true);
+
+                if (!$scripture['verses'][0]) {
+                    $link = '<a target="_blank" href=' . $scripture_link . '>' . $row_exploded[0] . '</a>';
+                } else {
+                    $link = '<a target="_blank" href=' . $scripture_link . '>'. $scripture['verses'][0]['reference']['human'] . '</a>';
+                }
+                if (get_option(BIBLE_DISPLAY_OPT) == 'scripture') {
+                    // put scripture in a blockquote tag
+                    $row_exploded[0] = '<blockquote>' . $scripture['verses'][0]['content'] . ' (' . $link . ')</blockquote>';
+                } else {
+                    $row_exploded[0] = $link;
+                }
 
                 // put the link and any text after it back together
                 $row = implode($row_exploded);
@@ -122,9 +130,9 @@ function bible_config() {
     load_plugin_textdomain('bible-for-wordpress', 'wp-content/plugins/'.$plugin_dir, $plugin_dir);
 
     // if settings have been posted
-    if (isset($_POST[BIBLE_VERSION_OPT])) {
+    if (isset($_POST[BIBLE_TRANSLATION_OPT])) {
         // if the option already exists, update it, else add it
-        (get_option(BIBLE_VERSION_OPT)) ? update_option(BIBLE_VERSION_OPT, $_POST[BIBLE_VERSION_OPT]) : add_option(BIBLE_VERSION_OPT, $_POST[BIBLE_VERSION_OPT]);
+        (get_option(BIBLE_TRANSLATION_OPT)) ? update_option(BIBLE_TRANSLATION_OPT, $_POST[BIBLE_TRANSLATION_OPT]) : add_option(BIBLE_TRANSLATION_OPT, $_POST[BIBLE_TRANSLATION_OPT]);
 
     }
 
@@ -135,9 +143,9 @@ function bible_config() {
 
     }
     // get current version of bible from db for selecting list item
-    $current_bible_version = get_option(BIBLE_VERSION_OPT);
+    $current_bible_version = get_option(BIBLE_TRANSLATION_OPT);
     // get current display type from db for display scripture or link
-	$current_display_type = get_option(BIBLE_DISPLAY_OPT);
+    $current_display_type = get_option(BIBLE_DISPLAY_OPT);
 
     ?>
 <h1><?php _e("Bible for Wordpress Plugin") ?></h1>
@@ -147,30 +155,39 @@ function bible_config() {
     });
 </script>
 <table>
-	<tr>
+    <tr>
         <td valign="top">
             <p><strong><?php _e("Settings") ?></strong></p>
             <p>
                 <form action="" method="post">
                     <dl>
-                        <dt><label for=<?php echo BIBLE_VERSION_OPT; ?>><?php _e("Bible Version:") ?></label></dt>
+                        <dt><label for=<?php echo BIBLE_TRANSLATION_OPT; ?>><?php _e("Bible Version:") ?></label></dt>
                         <dd>
                             <?php
-								$request_bible_version = wp_remote_get('https://www.bible.com/versions.json');
-								// Get response message
-								$bible_versions = wp_remote_retrieve_body($request_bible_version);
-								// Decode message to PHP array.
-								$bible_versions = json_decode($bible_versions, true);
-								$bible_versions = $bible_versions['by_language'];
-                                // print_r($bible_versions);
-							?>
-                            <select id=<?php echo BIBLE_VERSION_OPT; ?> name=<?php echo BIBLE_VERSION_OPT; ?> style="max-width:300px;" class="select2">
-                                <?php foreach ($bible_versions as $lang_index => $language) {
-                                    $label = esc_html($language['name']);
+                                $request_bible_version = wp_remote_get(esc_url_raw(BIBLE_DOT_COM_API_BASE_URI . "?type=all"));
+                                // Get response message
+                                $bible_versions = wp_remote_retrieve_body($request_bible_version);
+                                // Decode message to PHP array.
+                                $bible_versions = json_decode($bible_versions, true);
+                                $bible_versions = $bible_versions['versions'];
+                                $bible_data = array();
+                                foreach ($bible_versions as $bible_version) {
+                                    $lang = $bible_version['language']['name'];
+                                    $id = $bible_version['id'];
+                                    $version_data = array();
+                                    $version_data['name'] = $bible_version['language']['name'];
+                                    $version_data['abbreviation'] = $bible_version['abbreviation'];
+                                    $version_data['title'] = $bible_version['title'];
+                                    $bible_data[$lang][$id] = $version_data;
+                                }
+                                //print_r($bible_data);
+?>
+                            <select id=<?php echo BIBLE_TRANSLATION_OPT; ?> name=<?php echo BIBLE_TRANSLATION_OPT; ?> style="max-width:300px;" class="select2">
+                                <?php foreach ($bible_data as $lang => $version_id) {
                                 ?>
-                                    <optgroup label=<?php _e('"'.$label.'"');?>>
-                                    <?php foreach ($language['versions'] as $ver_index => $bible_version) { ?>
-										<option value=<?php _e($bible_version['id']); if ($current_bible_version == $bible_version['id']) { _e(' selected="selected"'); } ?>><?php _e($bible_version['abbr']." - ".$bible_version['title']); ?></option>
+                                    <optgroup label=<?php _e('"' . $lang . '"');?>>
+                                    <?php foreach ($version_id as $id => $version_data) { ?>
+                                        <option value=<?php _e($id); if ($current_bible_version == $id) { _e(' selected="selected"'); } ?>><?php _e($version_data['abbreviation'] . " - " . $version_data['title']); ?></option>
                                     <?php } ?>
                                     </optgroup>
                                 <?php } ?>
@@ -178,14 +195,14 @@ function bible_config() {
                         </dd>
                         <dt><label for="bible_display_type"><?php _e("Display Type:") ?></label></dt>
                         <dd>
-                            <select id=<?php echo BIBLE_DISPLAY_OPT; ?> name=<?php echo BIBLE_DISPLAY_OPT; ?>>
+                            <select id=<?php _e(BIBLE_DISPLAY_OPT) ?> name=<?php _e(BIBLE_DISPLAY_OPT) ?>>
                                 <option value="link" <?php if ($current_display_type == 'link') echo 'selected="selected"'; ?>>Reference Link</option>
                                 <option value="scripture" <?php if ($current_display_type == 'scripture') echo 'selected="selected"'; ?>>Scripture</option>
                             </select>
                         </dd>
                         <dt>
                             <input type="submit" value=<?php _e("Save Settings") ?>>
-						</dt>
+                        </dt>
                     </dl>
                 </form>
 
@@ -228,29 +245,29 @@ function bible_config() {
             <table>
                 <tr>
                     <td valign="top" width="50%" style="padding-right:10px">
-					<?php  ?>
+                    <?php  ?>
                         <p>
                             <i>Old Testament</i>
                             <hr/>
-							<?php
+                            <?php
                                 // List of old statement books and their abbreviations  (OSIS)
-                                $os_books = array('Genesis' => 'Gen', 'Exodus' => 'Exod', 'Leviticus' => 'Lev', 'Numbers' => 'Num', 'Deuteronomy' => 'Deut', 'Joshua' => 'Josh', 'Judges' => 'Judg', 'Ruth' => 'Ruth', '1 Samuel' => '1Sam', '2 Samuel' => '2Sam', '1 Kings' => '1Kgs', '2 Kings' => '2Kgs', '1 Chronicles' => '1Chr', '2 Chronicles' => '2Chr', 'Ezra' => 'Ezra', 'Nehemiah' => 'Neh', 'Esther' => 'Esth', 'Job' => 'Job', 'Psalms' => 'Ps', 'Proverbs' => 'Prov', 'Ecclesiastes' => 'Eccl', 'Song of Solomon' => 'Song', 'Isaiah' => 'Isa', 'Jeremiah' => 'Jer', 'Lamentations' => 'Lam', 'Ezekiel' => 'Ezek', 'Daniel' => 'Dan', 'Hosea' => 'Hos', 'Joel' => 'Joel', 'Amos' => 'Amos', 'Obadiah' => 'Obad', 'Jonah' => 'Jonah', 'Micah' => 'Mic', 'Nahum' => 'Nah', 'Habakkuk' => 'Hab', 'Zephaniah' => 'Zeph', 'Haggai' => 'Hag', 'Zechariah' => 'Zech', 'Malachi' => 'Mal');
-								foreach($os_books as $key => $value) {
-									echo "<code>".$key."</code> or \t<code>".$value."</code><br><br>";
-							}?>
+                                $os_books = array('Genesis' => 'Gen', 'Exodus' => 'Exo', 'Leviticus' => 'Lev', 'Numbers' => 'Num', 'Deuteronomy' => 'Deu', 'Joshua' => 'Jos', 'Judges' => 'Jdg', 'Ruth' => 'Rut', '1 Samuel' => '1Sa', '2 Samuel' => '2Sa', '1 Kings' => '1Ki', '2 Kings' => '2Ki', '1 Chronicles' => '1Ch', '2 Chronicles' => '2Ch', 'Ezra' => 'Ezr', 'Nehemiah' => 'Neh', 'Esther' => 'Est', 'Job' => 'Job', 'Psalms' => 'Psa', 'Proverbs' => 'Pro', 'Ecclesiastes' => 'Ecc', 'Song of Solomon' => 'Sng', 'Isaiah' => 'Isa', 'Jeremiah' => 'Jer', 'Lamentations' => 'Lam', 'Ezekiel' => 'Ezk', 'Daniel' => 'Dan', 'Hosea' => 'Hos', 'Joel' => 'Jol', 'Amos' => 'Amo', 'Obadiah' => 'Oba', 'Jonah' => 'Jon', 'Micah' => 'Mic', 'Nahum' => 'Nam', 'Habakkuk' => 'Hab', 'Zephaniah' => 'Zep', 'Haggai' => 'Hag', 'Zechariah' => 'Zec', 'Malachi' => 'Mal');
+                                foreach($os_books as $key => $value) {
+                                    echo "<code>".$key."</code> or \t<code>".$value."</code><br><br>";
+                            }?>
                         </p>
 
                     </td>
                     <td valign="top" style="padding-left:10px">
-						<p>
+                        <p>
                             <i>New Testament</i>
-							<hr/>
-							<?php
+                            <hr/>
+                            <?php
                                 // List of new statement books and their abbreviations  (OSIS)
-                                $ns_books = array('Matthew' => 'Matt', 'Mark' => 'Mark', 'Luke' => 'Luke', 'John' => 'John', 'Acts' => 'Acts', 'Romans' => 'Rom', '1 Corinthians' => '1Cor', '2 Corinthians' => '2Cor', 'Galatians' => 'Gal', 'Ephesians' => 'Eph', 'Philippians' => 'Phil', 'Colossians' => 'Col', '1 Thessalonians' => '1Thess', '2 Thessalonians' => '2Thess', '1 Timothy' => '1Tim', '2 Timothy' => '2Tim', 'Titus' => 'Titus', 'Philemon' => 'Phlm', 'Hebrews' => 'Heb', 'James' => 'Jas', '1 Peter' => '1Pet', '2 Peter' => '2Pet', '1 John' => '1John', '2 John' => '2John', '3 John' => '3John', 'Jude' => 'Jude', 'Revelation' => 'Rev');
+                                $ns_books = array('Matthew' => 'Mat', 'Mark' => 'Mrk', 'Luke' => 'Luk', 'John' => 'Jhn', 'Acts' => 'Act', 'Romans' => 'Rom', '1 Corinthians' => '1Co', '2 Corinthians' => '2Co', 'Galatians' => 'Gal', 'Ephesians' => 'Eph', 'Philippians' => 'Php', 'Colossians' => 'Col', '1 Thessalonians' => '1Th', '2 Thessalonians' => '2Th', '1 Timothy' => '1Ti', '2 Timothy' => '2Ti', 'Titus' => 'Tit', 'Philemon' => 'Phm', 'Hebrews' => 'Heb', 'James' => 'Jas', '1 Peter' => '1Pe', '2 Peter' => '2Pe', '1 John' => '1Jn', '2 John' => '2Jn', '3 John' => '3Jn', 'Jude' => 'Jud', 'Revelation' => 'Rev');
                                 foreach($ns_books as $key => $value) {
-									echo "<code>".$key."</code> or \t<code>".$value."</code><br><br>";
-							}?>
+                                    echo "<code>".$key."</code> or \t<code>".$value."</code><br><br>";
+                            }?>
                         </p>
                     </td>
                 </tr>
