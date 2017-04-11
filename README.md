@@ -15,7 +15,7 @@ Copyright 2016 by **ansidev** | License: **MIT**
 
 > Requires at least: `2.0`
 
-> Tested up to: `4.5.2`
+> Tested up to: `4.7.3`
 
 ### 2. Installation
 
@@ -27,15 +27,19 @@ Copyright 2016 by **ansidev** | License: **MIT**
 
 **Step 4:** Go to `Settings` > `Bible for Wordpress` to setting for plugin.
 
-### 3. Instruction
+### 3. Upgrade from version 2.1
 
-##### **3.1 Instructions on How To Use the plugin** 
+You should remove old version before upgrading to version 3.1 to avoid errors.
+
+### 4. Instruction
+
+##### **4.1 Instructions on How To Use the plugin** 
 
 1. Type the Bible Address. E.g: John 3:16. Then select them.
 
 2. Click Bible for Wordpress Button on the WP Editor Toolbar. You should see [bible]John 3:16[/bible]
 
-##### **3.2 Example:**
+##### **4.2 Example:**
 
 In the text editor, type: `Hi, my name is Scott and [bible]John 3:16[/bible] is my favorite verse.`
 
@@ -45,7 +49,7 @@ Remember to spell the verse reference properly and use the commonly accepted for
 
 References that use commas (ie. John 3:16,18) or multi-chapter spans (ie. John 3:16-4:5) will not work and will result in a link that leads to a dead page on [Bible.com](https://bible.com/ "Bible.com").
 
-##### **3.3 More information:**
+##### **4.3 More information:**
 
 You can also use abbreviation name for book name. Ex: `Gen` ~ `Genesis`. Please view all supported name in Plugin Settings Page.
 
