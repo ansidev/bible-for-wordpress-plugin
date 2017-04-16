@@ -24,7 +24,161 @@ define('BIBLE_SHORTCODE_OT', '[' . BIBLE_SHORTCODE . ']');
 define('BIBLE_SHORTCODE_CT', '[/' . BIBLE_SHORTCODE . ']');
 
 
+function get_old_statement_books() {
+    return array(
+        'Genesis' => 'Gen',
+        'Exodus' => 'Exo',
+        'Leviticus' => 'Lev',
+        'Numbers' => 'Num',
+        'Deuteronomy' => 'Deu',
+        'Joshua' => 'Jos',
+        'Judges' => 'Jdg',
+        'Ruth' => 'Rut',
+        '1 Samuel' => '1Sa',
+        '2 Samuel' => '2Sa',
+        '1 Kings' => '1Ki',
+        '2 Kings' => '2Ki',
+        '1 Chronicles' => '1Ch',
+        '2 Chronicles' => '2Ch',
+        'Ezra' => 'Ezr',
+        'Nehemiah' => 'Neh',
+        'Esther' => 'Est',
+        'Job' => 'Job',
+        'Psalms' => 'Psa',
+        'Proverbs' => 'Pro',
+        'Ecclesiastes' => 'Ecc',
+        'Song of Solomon' => 'Sng',
+        'Isaiah' => 'Isa',
+        'Jeremiah' => 'Jer',
+        'Lamentations' => 'Lam',
+        'Ezekiel' => 'Ezk',
+        'Daniel' => 'Dan',
+        'Hosea' => 'Hos',
+        'Joel' => 'Jol',
+        'Amos' => 'Amo',
+        'Obadiah' => 'Oba',
+        'Jonah' => 'Jon',
+        'Micah' => 'Mic',
+        'Nahum' => 'Nam',
+        'Habakkuk' => 'Hab',
+        'Zephaniah' => 'Zep',
+        'Haggai' => 'Hag',
+        'Zechariah' => 'Zec',
+        'Malachi' => 'Mal'
+    );
+}
 
+function get_new_statement_books() {
+    return array(
+        'Matthew' => 'Mat',
+        'Mark' => 'Mrk',
+        'Luke' => 'Luk',
+        'John' => 'Jhn',
+        'Acts' => 'Act',
+        'Romans' => 'Rom',
+        '1 Corinthians' => '1Co',
+        '2 Corinthians' => '2Co',
+        'Galatians' => 'Gal',
+        'Ephesians' => 'Eph',
+        'Philippians' => 'Php',
+        'Colossians' => 'Col',
+        '1 Thessalonians' => '1Th',
+        '2 Thessalonians' => '2Th',
+        '1 Timothy' => '1Ti',
+        '2 Timothy' => '2Ti',
+        'Titus' => 'Tit',
+        'Philemon' => 'Phm',
+        'Hebrews' => 'Heb',
+        'James' => 'Jas',
+        '1 Peter' => '1Pe',
+        '2 Peter' => '2Pe',
+        '1 John' => '1Jn',
+        '2 John' => '2Jn',
+        '3 John' => '3Jn',
+        'Jude' => 'Jud',
+        'Revelation' => 'Rev'
+    );
+}
+
+function get_total_chapters() {
+    return array(
+        'Gen' => 50,
+        'Exo' => 40,
+        'Lev' => 27,
+        'Num' => 36,
+        'Deu' => 34,
+        'Jos' => 24,
+        'Jdg' => 21,
+        'Rut' => 4,
+        '1Sa' => 31,
+        '2Sa' => 24,
+        '1Ki' => 22,
+        '2Ki' => 25,
+        '1Ch' => 29,
+        '2Ch' => 36,
+        'Ezr' => 10,
+        'Neh' => 13,
+        'Est' => 10,
+        'Job' => 42,
+        'Psa' => 150,
+        'Pro' => 31,
+        'Ecc' => 12,
+        'Sng' => 8,
+        'Isa' => 66,
+        'Jer' => 52,
+        'Lam' => 5,
+        'Ezk' => 48,
+        'Dan' => 12,
+        'Hos' => 14,
+        'Jol' => 3,
+        'Amo' => 9,
+        'Oba' => 1,
+        'Jon' => 4,
+        'Mic' => 7,
+        'Nam' => 3,
+        'Hab' => 3,
+        'Zep' => 3,
+        'Hag' => 2,
+        'Zec' => 14,
+        'Mal' => 4,
+        'Mat' => 28,
+        'Mrk' => 16,
+        'Luk' => 24,
+        'Jhn' => 21,
+        'Act' => 28,
+        'Rom' => 16,
+        '1Co' => 16,
+        '2Co' => 13,
+        'Gal' => 6,
+        'Eph' => 6,
+        'Php' => 4,
+        'Col' => 4,
+        '1Th' => 5,
+        '2Th' => 3,
+        '1Ti' => 6,
+        '2Ti' => 4,
+        'Tit' => 3,
+        'Phm' => 1,
+        'Heb' => 13,
+        'Jas' => 5,
+        '1Pe' => 5,
+        '2Pe' => 3,
+        '1Jn' => 5,
+        '2Jn' => 1,
+        '3Jn' => 1,
+        'Jud' => 1,
+        'Rev' => 22
+    );
+}
+
+function get_all_statement_books() {
+    $os_books = get_old_statement_books();
+    $ns_books = get_new_statement_books();
+    return array_merge($os_books, $ns_books);
+}
+
+// add a filter for all content to change bible tagged text into links
+add_filter('the_content', 'bible_generate_links');
 function bible_generate_links($text) {
     // If there is a bible tag in the text
     if (strpos($text, BIBLE_SHORTCODE_OT) !== false) {
@@ -115,15 +269,14 @@ function bible_generate_links($text) {
 
 }
 // load css into the admin pages
+add_action('admin_enqueue_scripts', 'select2_enqueue_style');
 function select2_enqueue_style() {
     wp_enqueue_style('select2', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css', array(), null); 
     wp_enqueue_script('jquery');
     wp_enqueue_script('select2', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js', array(), null, true);
 }
-add_action('admin_enqueue_scripts', 'select2_enqueue_style');
  
 function bible_config() {
-
 
     // set lang domain
     $plugin_dir = basename(dirname(__FILE__));
@@ -240,18 +393,17 @@ function bible_config() {
         </td>
         <td width="10%" style="padding:0 20px; white-space:nowrap">
 
-            <p><strong><?php _e("Acceptable book names:") ?></strong></p>
+            <p><strong><?php _e("Acceptable book names:"); ?></strong></p>
 
             <table>
                 <tr>
                     <td valign="top" width="50%" style="padding-right:10px">
-                    <?php  ?>
                         <p>
                             <i>Old Testament</i>
                             <hr/>
                             <?php
                                 // List of old statement books and their abbreviations  (OSIS)
-                                $os_books = array('Genesis' => 'Gen', 'Exodus' => 'Exo', 'Leviticus' => 'Lev', 'Numbers' => 'Num', 'Deuteronomy' => 'Deu', 'Joshua' => 'Jos', 'Judges' => 'Jdg', 'Ruth' => 'Rut', '1 Samuel' => '1Sa', '2 Samuel' => '2Sa', '1 Kings' => '1Ki', '2 Kings' => '2Ki', '1 Chronicles' => '1Ch', '2 Chronicles' => '2Ch', 'Ezra' => 'Ezr', 'Nehemiah' => 'Neh', 'Esther' => 'Est', 'Job' => 'Job', 'Psalms' => 'Psa', 'Proverbs' => 'Pro', 'Ecclesiastes' => 'Ecc', 'Song of Solomon' => 'Sng', 'Isaiah' => 'Isa', 'Jeremiah' => 'Jer', 'Lamentations' => 'Lam', 'Ezekiel' => 'Ezk', 'Daniel' => 'Dan', 'Hosea' => 'Hos', 'Joel' => 'Jol', 'Amos' => 'Amo', 'Obadiah' => 'Oba', 'Jonah' => 'Jon', 'Micah' => 'Mic', 'Nahum' => 'Nam', 'Habakkuk' => 'Hab', 'Zephaniah' => 'Zep', 'Haggai' => 'Hag', 'Zechariah' => 'Zec', 'Malachi' => 'Mal');
+                                $os_books = get_old_statement_books();
                                 foreach($os_books as $key => $value) {
                                     echo "<code>".$key."</code> or \t<code>".$value."</code><br><br>";
                             }?>
@@ -264,7 +416,7 @@ function bible_config() {
                             <hr/>
                             <?php
                                 // List of new statement books and their abbreviations  (OSIS)
-                                $ns_books = array('Matthew' => 'Mat', 'Mark' => 'Mrk', 'Luke' => 'Luk', 'John' => 'Jhn', 'Acts' => 'Act', 'Romans' => 'Rom', '1 Corinthians' => '1Co', '2 Corinthians' => '2Co', 'Galatians' => 'Gal', 'Ephesians' => 'Eph', 'Philippians' => 'Php', 'Colossians' => 'Col', '1 Thessalonians' => '1Th', '2 Thessalonians' => '2Th', '1 Timothy' => '1Ti', '2 Timothy' => '2Ti', 'Titus' => 'Tit', 'Philemon' => 'Phm', 'Hebrews' => 'Heb', 'James' => 'Jas', '1 Peter' => '1Pe', '2 Peter' => '2Pe', '1 John' => '1Jn', '2 John' => '2Jn', '3 John' => '3Jn', 'Jude' => 'Jud', 'Revelation' => 'Rev');
+                                $ns_books = get_new_statement_books();
                                 foreach($ns_books as $key => $value) {
                                     echo "<code>".$key."</code> or \t<code>".$value."</code><br><br>";
                             }?>
@@ -279,18 +431,16 @@ function bible_config() {
 
 }
 
-function bible_config_page() {
-
-    // add bible to plugins list in admin
-    if (function_exists('add_submenu_page')) add_submenu_page('options-general.php', __('Bible for Wordpress'), __('Bible for Wordpress'), 'manage_options', 'bible-for-wordpress', 'bible_config');
-
-}
-
-// add a filter for all content to change bible tagged text into links
-add_filter('the_content', 'bible_generate_links');
-
 // add bible to plugins list in admin
 add_action('admin_menu', 'bible_config_page');
+function bible_config_page() {
+    // add bible to plugins list in admin
+    if (function_exists('add_submenu_page')) {
+        add_submenu_page('options-general.php', __('Bible for Wordpress'), __('Bible for Wordpress'), 'manage_options', 'bible-for-wordpress', 'bible_config');
+    }
+}
+
+
 
 add_action('init', 'bible_for_wp_buttons');
 function bible_for_wp_buttons() {
@@ -336,4 +486,142 @@ function bible_shortcode_button_script()
 }
 
 add_action("admin_print_footer_scripts", "bible_shortcode_button_script");
+add_action( 'after_setup_theme', 'bible_setup' );
+function bible_setup() {
+    wp_enqueue_script( 'jquery-ui-dialog' );
+    wp_enqueue_style( 'wp-jquery-ui-dialog' );
+}
+add_action( 'media_buttons', 'bible_button' );
+function bible_button() {
+    ?>
+    <a href="#" id="insert-bible-verse" class="button">
+        <span class="dashicons dashicons-book-alt"></span>
+        Add Bible Verse
+    </a>
+    <?php
+}
+add_action( 'admin_head', 'bible_admin_styles' );
+function bible_admin_styles() {
+    // TODO: separate styles into .css files
+    ?>
+    <style type="text/css">
+    #insert-bible-verse .dashicons {
+        color: #82878c;
+        font-size: 17px;
+        margin-top: 5px;
+    }
+    .bible-dialog-actions {
+        margin-top: 20px;
+        text-align: right;
+    }
+    </style>
+    <?php
+}
+add_action( 'admin_footer', 'bible_admin_scripts' );
+function bible_admin_scripts() {
+    // TODO: separate scripts into .js files
+    ?>
+    <div id="bible-dialog-wrapper" class="bible-dialog hidden" style="max-width:800px">
+        <div class="bible-dialog-select">
+            <select id="book" name="book" class="select2">
+                <option value="">Book</option>
+                <optgroup label="<?php _e('Old Statements');?>">
+                <?php
+                    $os_books = get_old_statement_books();
+                    foreach ($os_books as $os_book_name => $os_book_code) { 
+                ?>
+                    <option value=<?php _e($os_book_code); ?>><?php _e($os_book_name); ?></option>
+                <?php } ?>
+                </optgroup>
+                <optgroup label="<?php _e('New Statements');?>">
+                <?php
+                    $ns_books = get_new_statement_books();
+                    foreach ($ns_books as $ns_book_name => $ns_book_code) { 
+                ?>
+                    <option value=<?php _e($ns_book_code); ?>><?php _e($ns_book_name); ?></option>
+                <?php } ?>
+                </optgroup>
+            </select>
+
+            <select id="chapter" name="chapter">
+                <option value="">Chapter</option>
+
+            </select>
+
+            <select id="verse" name="verse">
+                <option value="">Verse</option>
+            </select>
+        </div>
+        <div class="bible-dialog-actions">
+            <button id="bible-dialog-insert" class="button button-primary button-large">Insert</button>
+            <button id="bible-dialog-cancel" class="button button-default button-large">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+    (function ($) {
+      $(document).ready(function () {
+        var bibleDialog = $('#bible-dialog-wrapper');
+        // Bible dialog config
+        bibleDialog.dialog({
+            title: 'Insert Bible Verse',
+            dialogClass: 'wp-dialog',
+            autoOpen: false,
+            draggable: false,
+            width: 'auto',
+            modal: true,
+            resizable: false,
+            closeOnEscape: true,
+            position: {
+              my: "center",
+              at: "center",
+              of: window
+            },
+            open: function () {
+              // close dialog by clicking the overlay behind it
+              $('.ui-widget-overlay').bind('click', function(){
+                $('#bible-dialog').dialog('close');
+              })
+            },
+            create: function () {
+              // style fix for WordPress admin
+              $('.ui-dialog-titlebar-close').addClass('ui-button');
+            },
+        });
+        // Open Bible dialog
+        $('#insert-bible-verse').on('click', function () {
+            bibleDialog.dialog('open');
+        });
+        // Cancel Bible dialog
+        $('#bible-dialog-cancel').on('click', function () {
+            bibleDialog.dialog('close');
+        })
+        var chapterList = <?php _e(json_encode(get_total_chapters())); ?>;
+        $('#book').on('change', function () {
+            var selectedBook = $('#book');
+            var chapterSelect = $('#chapter');
+            // Clear all chapter numbers
+            chapterSelect.empty();
+            var totalChapters = chapterList[selectedBook.val()] + 1;
+            for (var i = 1; i < totalChapters; i++) {
+                chapterSelect.append($('<option>', {
+                    value: i,
+                    text: i
+                }));
+            }
+        });
+        // Insert Bible
+        $('#bible-dialog-insert').on('click', function () {
+            var bookSelector = $('#book');
+            var chapterSelector = $('#chapter');
+            var verseSelector = $('#verse');
+            var bibleAddress = bookSelector.val() + ' ' + chapterSelector.val() + ':' + verseSelector.val();
+            tinymce.activeEditor.execCommand('mceInsertContent', false, bibleAddress);
+            bibleDialog.dialog('close');
+        });
+      })
+    })(jQuery);
+    </script>
+    <?php
+}
 ?>
