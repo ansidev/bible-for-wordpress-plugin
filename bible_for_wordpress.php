@@ -617,6 +617,12 @@ function bible_admin_scripts() {
     </div>
 
     <script>
+    function isTinyMCEActive() {
+        if (typeof(tinyMCE) == "undefined" || tinyMCE.activeEditor == null || tinyMCE.activeEditor.isHidden() != false) {
+            return false;
+        }
+        return true;
+    }
     (function ($) {
       $(document).ready(function () {
         var bibleDialog = $('#bible-dialog-wrapper');
@@ -674,22 +680,14 @@ function bible_admin_scripts() {
             var chapterSelector = $('#chapter');
             var verseSelector = $('#verse');
             var bibleAddress = <?php _e("'" . BIBLE_SHORTCODE_OT . "'"); ?> + bookSelector.val().toUpperCase() + ' ' + chapterSelector.val() + ':' + verseSelector.val() + <?php _e("'" . BIBLE_SHORTCODE_CT . "'"); ?>;
+
             if (isTinyMCEActive()) {
-                tinymce.activeEditor.execCommand('mceInsertContent', false, bibleAddress);
+                tinyMCE.activeEditor.execCommand('mceInsertContent', false, bibleAddress);
             } else {
                 QTags.insertContent(bibleAddress);
             }
             bibleDialog.dialog('close');
         });
-
-        function isTinyMCEActive() {
-            is_tinyMCE_active = false;
-            if (typeof(tinyMCE) != "undefined") {
-                if (tinyMCE.activeEditor == null || tinyMCE.activeEditor.isHidden() != false) {
-                    is_tinyMCE_active = true;
-                }
-            }
-        }
       })
     })(jQuery);
     </script>
