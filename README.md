@@ -5,7 +5,7 @@ Plugin will retrive bible word from [Bible.com](https://bible.com/ "Bible.com") 
 
 Copyright 2010, 2012 by **Dan Frist** and **Jesse Lang** | License: **GPL v3**
 
-Copyright 2016 by **ansidev** | License: **MIT**
+Copyright 2016-2018 by **ansidev** | License: **MIT**
 
 ### 1. Plugin Name
 
@@ -26,6 +26,10 @@ Copyright 2016 by **ansidev** | License: **MIT**
 **Step 3:** Activate the plugin through the `Plugins` menu in WordPress.
 
 **Step 4:** Go to `Settings` > `Bible for Wordpress` to setting for plugin.
+
+[![Setting Menu](assets/setting-menu.png)]()
+
+[![Setting Page](assets/setting-page.png)]()
 
 ### 3. Upgrade from version 2.1
 
